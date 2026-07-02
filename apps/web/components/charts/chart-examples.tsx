@@ -8,9 +8,11 @@ import {
   Bar,
   BarChart,
   BarChartLoading,
+  BarColumnTrack,
   BarDepthBack,
   BarDepthFront,
   BarDepthProvider,
+  BarSquares,
   BarXAxis,
   BarYAxis,
   buildArcs,
@@ -87,6 +89,7 @@ import {
   RingCenter,
   RingChart,
   type RingData,
+  renderPatternPreset,
   resolveProfitLossTooltipLabel,
   SankeyChart,
   SankeyLink,
@@ -422,6 +425,18 @@ const barStackedData = [
   { month: "Apr", desktop: 4200, mobile: 3200 },
   { month: "May", desktop: 3800, mobile: 2600 },
   { month: "Jun", desktop: 5500, mobile: 3800 },
+];
+
+const barShapePatternColor = "var(--chart-5)";
+
+const barShapeTrackPatternColor = "var(--chart-grid)";
+
+const barShapeGradientStops = [
+  { offset: 0, color: "var(--chart-1)" },
+  { offset: 25, color: "var(--chart-2)" },
+  { offset: 50, color: "var(--chart-3)" },
+  { offset: 75, color: "var(--chart-4)" },
+  { offset: 100, color: "var(--chart-5)" },
 ];
 
 const barHorizontalData = [
@@ -2174,6 +2189,234 @@ function makeBarExamples(): ChartExample[] {
           />
           <BarXAxis />
           <ChartTooltip />
+        </BarExampleChart>
+      ),
+    },
+    {
+      title: "Bar Chart - Shape & Gradient",
+      description:
+        "Discrete square columns with per-series gradient, diagonal column tracks, and ring crosshair indicators",
+      code: `<BarChart
+  data={chartData}
+  xDataKey="month"
+  margin={{ top: 8, right: 8, bottom: 40, left: 8 }}
+  squareSnap={{ squareGap: 3, groupGap: 4 }}
+>
+  <PatternLines
+    id="shape-track-pattern"
+    height={6}
+    width={6}
+    orientation={["diagonal"]}
+    stroke="var(--chart-grid)"
+    strokeWidth={1}
+  />
+  <BarColumnTrack
+    fill="url(#shape-track-pattern)"
+    opacity={0.65}
+    squareGap={3}
+    squareRadius={0.25}
+    groupGap={4}
+  />
+  <PatternLines
+    id="shape-desktop-pattern"
+    height={6}
+    width={6}
+    orientation={["diagonal"]}
+    stroke="var(--chart-5)"
+    strokeWidth={1}
+  />
+  <BarSquares
+    dataKey="desktop"
+    fill="url(#shape-desktop-pattern)"
+    squareGap={3}
+    squareRadius={0.25}
+    groupGap={4}
+    stroke="var(--chart-5)"
+  />
+  <BarSquares
+    dataKey="mobile"
+    fill="var(--chart-1)"
+    useGradient
+    gradientStops={[
+      { offset: 0, color: "var(--chart-1)" },
+      { offset: 25, color: "var(--chart-2)" },
+      { offset: 50, color: "var(--chart-3)" },
+      { offset: 75, color: "var(--chart-4)" },
+      { offset: 100, color: "var(--chart-5)" },
+    ]}
+    squareGap={3}
+    squareRadius={0.25}
+    groupGap={4}
+    stroke="var(--chart-5)"
+  />
+  <BarXAxis />
+  <ChartTooltip
+    showCrosshair={false}
+    dotVariant="ring"
+    dotScale={1.05}
+    dotColor="oklch(1 0.002 186.385 / 0.7)"
+  />
+</BarChart>`,
+      footer:
+        "Use squareSnap on BarChart so ring indicators align with square columns.",
+      render: () => (
+        <BarExampleChart
+          data={barStackedData}
+          squareSnap={{ groupGap: 4, squareGap: 3 }}
+          xDataKey="month"
+        >
+          {renderPatternPreset("diagonal", "bar-shape-track-pattern", {
+            color: barShapeTrackPatternColor,
+          })}
+          <BarColumnTrack
+            fill="url(#bar-shape-track-pattern)"
+            groupGap={4}
+            opacity={0.65}
+            squareGap={3}
+            squareRadius={0.25}
+          />
+          {renderPatternPreset("diagonal", "bar-shape-desktop-pattern", {
+            color: barShapePatternColor,
+          })}
+          <BarSquares
+            dataKey="desktop"
+            fill="url(#bar-shape-desktop-pattern)"
+            groupGap={4}
+            squareGap={3}
+            squareRadius={0.25}
+            stroke={barShapePatternColor}
+          />
+          <BarSquares
+            dataKey="mobile"
+            fill="var(--chart-1)"
+            gradientStops={barShapeGradientStops}
+            groupGap={4}
+            squareGap={3}
+            squareRadius={0.25}
+            stroke="var(--chart-5)"
+            useGradient
+          />
+          <BarXAxis />
+          <ChartTooltip
+            dotColor="oklch(1 0.002 186.385 / 0.7)"
+            dotScale={1.05}
+            dotVariant="ring"
+            showCrosshair={false}
+          />
+        </BarExampleChart>
+      ),
+    },
+    {
+      title: "Bar Chart - Shape Squircle Ring",
+      description:
+        "Fully rounded square columns with a squircle ring indicator snapped to each bar",
+      code: `<BarChart
+  data={chartData}
+  xDataKey="month"
+  margin={{ top: 8, right: 8, bottom: 40, left: 8 }}
+  squareSnap={{ squareGap: 3, groupGap: 4 }}
+>
+  <PatternLines
+    id="shape-squircle-track"
+    height={6}
+    width={6}
+    orientation={["diagonal"]}
+    stroke="var(--chart-grid)"
+    strokeWidth={1}
+  />
+  <BarColumnTrack
+    fill="url(#shape-squircle-track)"
+    opacity={0.65}
+    squareGap={3}
+    squareRadius={0.5}
+    groupGap={4}
+  />
+  <PatternLines
+    id="shape-squircle-desktop"
+    height={6}
+    width={6}
+    orientation={["diagonal"]}
+    stroke="var(--chart-5)"
+    strokeWidth={1}
+  />
+  <BarSquares
+    dataKey="desktop"
+    fill="url(#shape-squircle-desktop)"
+    squareGap={3}
+    squareRadius={0.5}
+    groupGap={4}
+    stroke="var(--chart-5)"
+  />
+  <BarSquares
+    dataKey="mobile"
+    fill="var(--chart-1)"
+    useGradient
+    gradientStops={[
+      { offset: 0, color: "var(--chart-1)" },
+      { offset: 25, color: "var(--chart-2)" },
+      { offset: 50, color: "var(--chart-3)" },
+      { offset: 75, color: "var(--chart-4)" },
+      { offset: 100, color: "var(--chart-5)" },
+    ]}
+    squareGap={3}
+    squareRadius={0.5}
+    groupGap={4}
+    stroke="var(--chart-5)"
+  />
+  <BarXAxis />
+  <ChartTooltip
+    showCrosshair={false}
+    dotVariant="ring"
+    dotRadiusFraction={0.5}
+    dotStrokeWidth={1}
+    dotColor="oklch(1 0.002 186.385 / 0.7)"
+  />
+</BarChart>`,
+      render: () => (
+        <BarExampleChart
+          data={barStackedData}
+          squareSnap={{ groupGap: 4, squareGap: 3 }}
+          xDataKey="month"
+        >
+          {renderPatternPreset("diagonal", "bar-shape-squircle-track", {
+            color: barShapeTrackPatternColor,
+          })}
+          <BarColumnTrack
+            fill="url(#bar-shape-squircle-track)"
+            groupGap={4}
+            opacity={0.65}
+            squareGap={3}
+            squareRadius={0.5}
+          />
+          {renderPatternPreset("diagonal", "bar-shape-squircle-desktop", {
+            color: barShapePatternColor,
+          })}
+          <BarSquares
+            dataKey="desktop"
+            fill="url(#bar-shape-squircle-desktop)"
+            groupGap={4}
+            squareGap={3}
+            squareRadius={0.5}
+            stroke={barShapePatternColor}
+          />
+          <BarSquares
+            dataKey="mobile"
+            fill="var(--chart-1)"
+            gradientStops={barShapeGradientStops}
+            groupGap={4}
+            squareGap={3}
+            squareRadius={0.5}
+            stroke="var(--chart-5)"
+            useGradient
+          />
+          <BarXAxis />
+          <ChartTooltip
+            dotColor="oklch(1 0.002 186.385 / 0.7)"
+            dotRadiusFraction={0.5}
+            dotStrokeWidth={1}
+            dotVariant="ring"
+            showCrosshair={false}
+          />
         </BarExampleChart>
       ),
     },
