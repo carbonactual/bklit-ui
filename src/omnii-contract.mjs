@@ -1,0 +1,2 @@
+export function toOmniiProjection({ subjectId = null, capabilities = [], context = {}, presentation = {} } = {}) { return { type: 'projection', product: 'BKLIT_UI', subjectId, capabilities, context, presentation, sourceOfTruth: 'OMNII', authorityRef: null }; }
+export function assertNotSourceOfTruth(value) { if (value?.sourceOfTruth && value.sourceOfTruth !== 'OMNII') throw new Error('BKLIT projection cannot become an independent source of truth'); return true; }
